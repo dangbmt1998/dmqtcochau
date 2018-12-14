@@ -20,7 +20,7 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
         public ActionResult Index()
         {
             var product = db.Products.OrderByDescending(x => x.ID).ToList();
-            
+
             if (Session["Username"] != null)
             {
                 return View(product);
@@ -29,7 +29,7 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
             {
                 return RedirectToAction("Login");
             }
-            
+
         }
         [HttpGet]
         public ActionResult Create()
@@ -38,23 +38,24 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        
+
         [ValidateAntiForgeryToken]
         public ActionResult Create(Product p)
         {
-            if(ModelState.IsValid){
-            var pro = new Product();
-            
-            pro.ProductCode = p.ProductCode;
-            pro.ProductName = p.ProductName;
-            pro.ProductType = p.ProductType;
-            pro.ProductTypeID = p.ProductTypeID;
-            pro.SalePrice = p.SalePrice;
-            pro.Status = p.Status;
-            pro.Quantity = p.Quantity;
-            db.Products.Add(pro);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                var pro = new Product();
+
+                pro.ProductCode = p.ProductCode;
+                pro.ProductName = p.ProductName;
+                pro.ProductType = p.ProductType;
+                pro.ProductTypeID = p.ProductTypeID;
+                pro.SalePrice = p.SalePrice;
+                pro.Status = p.Status;
+                pro.Quantity = p.Quantity;
+                db.Products.Add(pro);
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
             //Tao điều kiện
             return View();
@@ -72,14 +73,14 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
             {
                 using (DIENMAYQUYETTIENEntities db = new DIENMAYQUYETTIENEntities())
                 {
-                    var obj = db.Accounts.Where(a => a.Username.Equals(acc.Username)&& a.Password.Equals(acc.Password)).FirstOrDefault();
-                    
-                        if (obj != null)  
+                    var obj = db.Accounts.Where(a => a.Username.Equals(acc.Username) && a.Password.Equals(acc.Password)).FirstOrDefault();
+
+                    if (obj != null)
                     {
                         Session["Username"] = obj.Username.ToString();
                         Session["FullName"] = obj.FullName.ToString();
-                        return RedirectToAction("Index");  
-                    }  
+                        return RedirectToAction("Index");
+                    }
                 }
             }
             return View(acc);
