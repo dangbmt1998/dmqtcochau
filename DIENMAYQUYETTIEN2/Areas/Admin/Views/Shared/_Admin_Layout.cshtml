@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -218,7 +219,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
-                        Hi!.	
+                        
 						@if(Session["FullName"] != null) { 
 							@Session["FullName"].ToString(); 
 						}
@@ -264,7 +265,7 @@
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                         @using (Html.BeginForm("Logout", "ProductAdmin", FormMethod.Post))
 						{
-						<a href="javascript:;" onclick="document.forms[0].submit();">Logout</a>
+						<input type="submit" value="Logout" class="btn btn-default" />
 						}
                     </div>
                 </div>

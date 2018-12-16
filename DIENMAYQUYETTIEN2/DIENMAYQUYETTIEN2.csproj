@@ -270,7 +270,6 @@
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Areas\Admin\Views\ProductAdmin\Create.cshtml" />
     <Content Include="Areas\Admin\Views\ProductAdmin\Login.cshtml" />
-    <Content Include="Areas\Admin\Views\ProductAdmin\UserDashBoard.cshtml" />
     <Content Include="fonts\font-awesome-4.7.0\fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\font-awesome-4.7.0\fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\font-awesome-4.7.0\fonts\fontawesome-webfont.woff" />

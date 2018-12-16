@@ -50,23 +50,23 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
                 pro.ProductName = p.ProductName;
                 pro.ProductType = p.ProductType;
                 pro.ProductTypeID = p.ProductTypeID;
+                pro.OriginPrice = p.OriginPrice;
                 pro.SalePrice = p.SalePrice;
                 pro.Status = p.Status;
                 pro.Quantity = p.Quantity;
+                pro.InstallmentPrice = p.InstallmentPrice;
                 db.Products.Add(pro);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             //Tao điều kiện
             return View();
-
         }
         public ActionResult Login()
         {
             return View();
         }
         [HttpPost]
-
         public ActionResult Login(Account acc)
         {
             if (ModelState.IsValid)
@@ -85,15 +85,95 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
             }
             return View(acc);
         }
+
         [HttpPost]
-        [Authorize]
         public ActionResult Logout()
-        {
-            FormsAuthentication.SignOut();
+        {   
             Session.Clear();
             Session.Abandon(); // it will clear the session at the end of request
-            return RedirectToAction("Index", "ProductAdmin");
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Login");
         }
 
+        [HttpGet]
+        public ActionResult Edit(int ID)
+        {
+            if (ID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Product bangsanpham = db.Products.Find(ID);
+            if (bangsanpham == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.ProductTypeID = new SelectList(db.ProductTypes, "ID", "ProductTypeName", bangsanpham.ProductTypeID);
+            return View(bangsanpham);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Product model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                using (var scope = new TransactionScope())
+                {
+
+                    db.SaveChanges();
+
+                    var path = Server.MapPath("~/App_Data");
+                    path = path + "/" + model.ID;
+                    if (Request.Files["HinhAnh"] != null && Request.Files["HinhAnh"].ContentLength > 0)
+                    {
+                        Request.Files["HinhAnh"].SaveAs(path);
+
+
+                    }
+                    scope.Complete();
+                    return RedirectToAction("Login");
+
+                }
+            }
+            ViewBag.ProductTypeID = new SelectList(db.ProductTypes, "ID", "ProductTypeName", model.ProductTypeID);
+            return View(model);
+
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Product bangsanpham = db.Products.Find(id);
+            if (bangsanpham == null)
+            {
+                return HttpNotFound();
+            }
+            return View(bangsanpham);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Product bangsanpham = db.Products.Find(id);
+            db.Products.Remove(bangsanpham);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+       
     }
 }
