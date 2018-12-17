@@ -7,15 +7,15 @@
 
 <h2>Edit</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "ProductAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Product</h4>
         <hr />
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.ID)
+       
 
         <div class="form-group">
             @Html.LabelFor(model => model.ProductCode, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -33,14 +33,20 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductTypeID, "ProductTypeID", htmlAttributes: new { @class = "control-label col-md-2" })
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.ProductTypeID, "Loại", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("ProductTypeID", String.Empty)
+                @Html.DropDownListFor(model => model.ProductTypeID, (IEnumerable<SelectListItem>)ViewData["ProductTypeID"], new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ProductTypeID)
+            </div>
+        </div>*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProductTypeID, "ProductTypeID", new { @class = "control-label col-md-2" }) :
+            <div class="col-md-10">
+                @Html.DropDownList("ProductTypeID", new SelectList(ViewBag.ProductType, "ID", "ProductTypeName"))
                 @Html.ValidationMessageFor(model => model.ProductTypeID)
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.SalePrice, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -74,10 +80,11 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Avatar, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label("HinhAnh", "Hình sản phẩm", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Avatar)
-                @Html.ValidationMessageFor(model => model.Avatar)
+                @Html.TextBox("HinhAnh", null, new { type = "file", onchange = "readURL(this);", @class = "form-control" })
+                @Html.ValidationMessage("HinhAnh")
+                <img id="HinhSP" src="@Url.Action("Details", new { id = Model.ID })" width="200" height="200" />
             </div>
         </div>
 
@@ -100,3 +107,25 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#HinhSP').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#HinhSP').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

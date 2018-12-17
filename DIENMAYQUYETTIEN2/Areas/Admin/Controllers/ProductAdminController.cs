@@ -119,17 +119,14 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Edit(int ID)
         {
-            if (ID == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Product bangsanpham = db.Products.Find(ID);
-            if (bangsanpham == null)
+            Product model = db.Products.Find(ID);
+            if (model == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ProductTypeID = new SelectList(db.ProductTypes, "ID", "ProductTypeName", bangsanpham.ProductTypeID);
-            return View(bangsanpham);
+            //ViewBag.ProductTypeID = new SelectList(db.ProductTypes, "ID", "ProducTypeName", model.ProductTypeID);
+            ViewBag.ProductType = db.ProductTypes.OrderByDescending(x => x.ID).ToList();
+            return View(model);
         }
 
         [HttpPost]
@@ -141,7 +138,7 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
             {
                 using (var scope = new TransactionScope())
                 {
-
+                    db.Entry(model).State = EntityState.Modified;
                     db.SaveChanges();
 
                     var path = Server.MapPath("~/App_Data");
@@ -153,7 +150,7 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
 
                     }
                     scope.Complete();
-                    return RedirectToAction("Login");
+                    return RedirectToAction("Index");
 
                 }
             }
