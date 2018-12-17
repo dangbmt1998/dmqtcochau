@@ -69,7 +69,7 @@
                                 @Html.DisplayFor(modelItem => item.Quantity)
                             </td>
                             <td>
-                                <img src="/Images/@item.Avatar" width="100px" height="120px" />
+                                <img src="@Url.Action("Details", new { id = item.ID })" width="150" height="100" />
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Status)

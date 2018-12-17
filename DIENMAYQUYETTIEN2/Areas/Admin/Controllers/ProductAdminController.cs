@@ -31,6 +31,7 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
             }
 
         }
+        //create
         [HttpGet]
         public ActionResult Create()
         {
@@ -38,12 +39,13 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-
         [ValidateAntiForgeryToken]
         public ActionResult Create(Product p)
         {
             if (ModelState.IsValid)
             {
+                using (var scope = new TransactionScope())
+                { 
                 var pro = new Product();
 
                 pro.ProductCode = p.ProductCode;
@@ -55,13 +57,32 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
                 pro.Status = p.Status;
                 pro.Quantity = p.Quantity;
                 pro.InstallmentPrice = p.InstallmentPrice;
+                pro.Avatar = p.Avatar;
                 db.Products.Add(pro);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                var path = Server.MapPath("~/App_Data");
+                path = path + "/" + pro.ID;
+                    if (Request.Files["Avatar"] != null && Request.Files["Avatar"].ContentLength > 0)
+                    {
+                        Request.Files["Avatar"].SaveAs(path);
+                        scope.Complete();
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Avatar", "Chưa có hình ảnh");
+                    }
+                }
+
             }
-            //Tao điều kiện
             return View();
         }
+        public FileResult Details(int id)
+        {
+            var path = Server.MapPath("~/App_Data/" + id);
+            return File(path, "images");
+        }
+        //Login
         public ActionResult Login()
         {
             return View();
@@ -85,7 +106,7 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
             }
             return View(acc);
         }
-
+        //Logout
         [HttpPost]
         public ActionResult Logout()
         {   

@@ -8,7 +8,7 @@
 <h2>Create New</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Create", "ProductAdmin",FormMethod.Post, new { enctype = "multipart/form-data" })) 
 {
     @Html.AntiForgeryToken()
     
@@ -76,8 +76,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Avatar, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBox("HinhAnh", null, new { type = "file", onchange = "readURL(this)", @class = "form-control" })
-                @Html.ValidationMessage("HinhAnh")
+                @Html.TextBox("Avatar", null, new { type = "file", onchange = "readURL(this)", @class = "form-control" })
+                @Html.ValidationMessage("Avatar")
                 <img id="HinhSP" src="" width="200" height="200" />
             </div>
         </div>
@@ -103,7 +103,7 @@
 </div>
 
 
- 
+
 
     <script>
         function readURL(input) {
