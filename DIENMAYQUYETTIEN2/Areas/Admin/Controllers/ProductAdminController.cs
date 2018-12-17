@@ -168,7 +168,7 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
 
                     }
                     scope.Complete();
-                    return RedirectToAction("Login");
+                    return RedirectToAction("Index");
 
                 }
             }
