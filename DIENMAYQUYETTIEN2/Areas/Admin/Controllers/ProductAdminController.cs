@@ -36,7 +36,14 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
         public ActionResult Create()
         {
             ViewBag.ProductType = db.ProductTypes.OrderByDescending(x => x.ID).ToList();
-            return View();
+            if (Session["Username"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -119,14 +126,36 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Edit(int ID)
         {
+<<<<<<< HEAD
             Product model = db.Products.Find(ID);
             if (model == null)
-            {
+=======
+            
+                if (ID == null)
+                {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Product bangsanpham = db.Products.Find(ID);
+                if (bangsanpham == null)
+                {
                 return HttpNotFound();
+                }
+            if (Session["Username"] != null)
+            {
+                ViewBag.ProductTypeID = new SelectList(db.ProductTypes, "ID", "ProductTypeName", bangsanpham.ProductTypeID);
+                return View(bangsanpham);
             }
+            else
+>>>>>>> f4e2eda2ef465cdcb917c61c5b94c9653aaf87c8
+            {
+                return RedirectToAction("Login");
+            }
+<<<<<<< HEAD
             //ViewBag.ProductTypeID = new SelectList(db.ProductTypes, "ID", "ProducTypeName", model.ProductTypeID);
             ViewBag.ProductType = db.ProductTypes.OrderByDescending(x => x.ID).ToList();
             return View(model);
+=======
+>>>>>>> f4e2eda2ef465cdcb917c61c5b94c9653aaf87c8
         }
 
         [HttpPost]
@@ -171,7 +200,14 @@ namespace DIENMAYQUYETTIEN2.Areas.Admin.Controllers
             {
                 return HttpNotFound();
             }
-            return View(bangsanpham);
+            if (Session["Username"] != null)
+            {
+                return View(bangsanpham);
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         [HttpPost, ActionName("Delete")]
